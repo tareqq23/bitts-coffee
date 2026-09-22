@@ -1,0 +1,83 @@
+{
+  "storeInfo": {
+    "name": "BITTS Coffee",
+    "tagline": "We Serve Bitter and Sweets",
+    "slogan": "Every cup,\nevery bite,\nevery moment\nmatters.",
+    "description": "Kopi pilihan berkualitas tinggi, sajian makanan hangat, dan ruang santai intim di jantung Pandeglang. Di sini kami merayakan keseimbangan rasa — pahitnya kopi yang menenangkan dan manisnya kebersamaan.",
+    "heroBadge": "WE SERVE BITTER AND SWEETS",
+    "heroImage": "assets/uploads/WhatsApp_Image_2026-09-21_at_15_41_51_jpeg_1789983223824.jpg",
+    "heroCtaPrimary": "Jelajahi Menu",
+    "heroCtaSecondary": "Chat via WhatsApp"
+  },
+  "sanctuary": {
+    "title": "Work, Chill & Connect",
+    "desc": "Ruang nyaman dengan stopkontak di setiap meja & Wi-Fi super kencang.",
+    "amenities": [
+      "High-Speed Wi-Fi",
+      "Power Plug / Colokan",
+      "Musholla Nyaman"
+    ]
+  },
+  "story": {
+    "tag": "OUR STORY & PHILOSOPHY",
+    "title": "We Serve Bitter and Sweets",
+    "lead": "Lahir dari kecintaan pada kopi dan keinginan menciptakan ruang temu yang hangat bagi warga Pandeglang.",
+    "p1": "Nama BITTS terinspirasi dari 'Bitter' dan 'Sweet' — dua sisi rasa yang tidak saling meniadakan, melainkan saling melengkapi. Sama seperti kehidupan, ada saatnya kita butuh kepahitan kopi untuk membangkitkan fokus, dan ada saatnya kita butuh manisnya kehangatan untuk merayakan hari.",
+    "p2": "Kami memilih biji kopi Nusantara terbaik yang di-roast dengan presisi, diseduh oleh barista berpengalaman, dan disajikan dengan senyum ramah khas BITTS.",
+    "quote": "Good coffee is not just a drink, it is a pause in a busy world."
+  },
+  "hours": {
+    "weekday": "08:00 – 22:00 WIB",
+    "weekend": "08:00 – 23:00 WIB",
+    "weekdayOpen": "08:00",
+    "weekdayClose": "22:00",
+    "weekendOpen": "08:00",
+    "weekendClose": "23:00"
+  },
+  "contact": {
+    "address": "Jl. Ciwasiat No.21, Kec. Pandeglang, Kabupaten Pandeglang, Banten 42211",
+    "whatsapp": "62895349213579",
+    "whatsappDisplay": "+62 851-7992-9290",
+    "instagram": "bittscoffee",
+    "instagramUrl": "https://instagram.com/bittscoffee",
+    "mapsUrl": "https://maps.google.com/?q=Jl.+Ciwasiat+No.21+Pandeglang+Banten",
+    "mapsEmbed": "https://maps.app.goo.gl/C4QPxabaMZgdPRRi6"
+  },
+  "highlights": [
+    {
+      "icon": "☕",
+      "title": "Quality Specialty Beans",
+      "desc": "Roasting profil optimal"
+    },
+    {
+      "icon": "🌿",
+      "title": "Fresh Daily Food",
+      "desc": "Dibuat hangat saat dipesan"
+    },
+    {
+      "icon": "⚡",
+      "title": "Fast Order via WA",
+      "desc": "Dine-in, takeaway & delivery"
+    },
+    {
+      "icon": "🛵",
+      "title": "Go-Food Available",
+      "desc": "Tersedia di app pesan antar"
+    }
+  ],
+  "testimonials": [],
+  "floatingWA": {
+    "enabled": true,
+    "message": "Halo BITTS Coffee! Saya ingin memesan menu. Boleh dibantu?"
+  },
+  "footer": {
+    "tagline": "We Serve Bitter and Sweets",
+    "copyright": "© 2025 BITTS Coffee, Pandeglang — All rights reserved.",
+    "showHours": true,
+    "showSocials": true
+  },
+  "animations": {
+    "heroEntrance": true
+  },
+  "updatedAt": "2026-09-22T07:35:34.370Z"
+}

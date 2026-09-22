@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BITTS Coffee | We Serve Bitter and Sweets — Pandeglang</title>
+  <meta name="description" content="Specialty Coffee & Artisanal Food di Pandeglang, Banten. BITTS Coffee — We Serve Bitter and Sweets.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="assets/bitts-logo-tight-black.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Floating Admin Quick-Bar (Hanya tampil jika admin sudah login) -->
+  <aside id="bittsAdminQuickBar" class="admin-quick-bar" style="display:none;" aria-label="Menu Cepat Admin">
+    <div class="container admin-quick-inner">
+      <div class="admin-quick-left">
+        <span class="admin-quick-badge">☕ Mode Admin</span>
+        <span class="admin-quick-user" id="adminQuickUserName">adminbitts</span>
+      </div>
+      <div class="admin-quick-actions">
+        <a href="/admin" class="btn-quick-admin" title="Buka Dashboard CMS">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Buka Studio CMS
+        </a>
+        <button id="quickLogoutBtn" class="btn-quick-logout" title="Keluar dari sesi admin">
+          Keluar
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════
+       1. FLOATING COMPACT NAVBAR (dark — brand contrast)
+       ═══════════════════════════════════════════════ -->
+  <div class="header-wrapper">
+    <nav class="compact-navbar" aria-label="Navigasi Utama">
+
+      <!-- Logo BITTS — authentic twin pebble mark + wordmark -->
+      <a href="#home" class="brand-badge-wrap" title="BITTS Coffee">
+        <img src="assets/bitts-logo-tight-white.png" alt="BITTS Logo" class="brand-logo-img">
+        <span class="brand-title-compact">BITTS</span>
+      </a>
+
+      <!-- Nav Links -->
+      <ul class="nav-links-compact" id="navLinksList">
+        <li><a href="#home"      class="nav-item-link active">Home</a></li>
+        <li><a href="#catalog"   class="nav-item-link">Menu</a></li>
+        <li><a href="#story-full" class="nav-item-link">Tentang</a></li>
+        <li><a href="#visit"     class="nav-item-link">Lokasi</a></li>
+      </ul>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions-compact">
+        <a href="#" id="navWaBtn" target="_blank" rel="noopener" class="btn-order-compact">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          Pesan Sekarang
+        </a>
+        <button class="mobile-nav-btn" id="mobileNavToggle" aria-label="Toggle Menu">&#9776;</button>
+      </div>
+
+    </nav>
+  </div>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════════
+         2. HERO BENTO GRID
+         ═══════════════════════════════════════════════ -->
+    <section class="hero-bento-section" id="home">
+      <div class="container">
+        <div class="bento-grid">
+
+          <!-- Tile A: Main Statement -->
+          <article class="bento-card bento-main-tile hero-animate">
+            <div>
+              <div class="slogan-pill-modern">
+                <span id="dynHeroBadge">✦ We Serve Bitter and Sweets</span>
+              </div>
+              <h1 class="hero-editorial-title" id="dynHeroTitle">
+                Every cup,<br>every bite,<br>every moment<br><em>matters.</em>
+              </h1>
+              <p class="hero-editorial-desc" id="dynHeroDesc">
+                Kopi pilihan berkualitas tinggi, sajian makanan hangat, dan ruang santai intim di jantung Pandeglang. Di sini kami merayakan keseimbangan rasa — pahitnya kopi yang menenangkan dan manisnya kebersamaan.
+              </p>
+            </div>
+            <div class="hero-actions-row">
+              <a href="#catalog" class="btn-pill-primary" id="dynHeroCtaPrimary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+                </svg>
+                Jelajahi Menu
+              </a>
+              <a href="https://wa.me/6285179929290" target="_blank" rel="noopener" class="btn-pill-secondary" id="dynHeroCtaSecondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                Chat via WhatsApp
+              </a>
+            </div>
+          </article>
+
+          <!-- Tile B: Artisan Visual -->
+          <article class="bento-card bento-visual-tile hero-animate" style="animation-delay: 0.15s;">
+            <img id="dynHeroImg" src="assets/images/hero-coffee.jpg" alt="Artisanal Latte Art BITTS Coffee Pandeglang" loading="eager">
+            <div class="visual-tile-overlay">
+              <div class="taste-notes-row">
+                <span class="taste-tag">☕ Specialty Arabica</span>
+                <span class="taste-tag">✨ Caramel Undertone</span>
+                <span class="taste-tag">🌿 Pandeglang Fresh</span>
+              </div>
+              <h3 class="visual-tile-title">Handcrafted Brews</h3>
+              <p class="visual-tile-desc">Disiapkan dengan takaran presisi dan biji kopi pilihan.</p>
+            </div>
+          </article>
+
+          <!-- Tile C + D: Subgrid row -->
+          <div class="bento-subgrid" id="story">
+
+            <!-- Tile C: Live Store Status -->
+            <article class="bento-card bento-status-card hero-animate" style="animation-delay: 0.25s;">
+              <div>
+                <div class="status-header-live">
+                  <span class="status-label-text">LIVE STORE STATUS</span>
+                  <span class="live-indicator" id="livePill">
+                    <span class="pulse-dot"></span>
+                    <span id="liveStatusText">Buka Sekarang</span>
+                  </span>
+                </div>
+                <div class="store-hours-text" id="liveHoursDetail">Senin &ndash; Jumat: 08:00 &ndash; 22:00 WIB</div>
+                <div class="store-location-text">Jl. Ciwasiat No.21, Pandeglang</div>
+              </div>
+              <a href="https://maps.google.com/?q=Jl.+Ciwasiat+No.21+Pandeglang+Banten"
+                 target="_blank" rel="noopener" class="bento-link-small" id="dynStatusMapsLink">
+                Petunjuk Arah &rarr;
+              </a>
+            </article>
+
+            <!-- Tile D: Vibe & Space -->
+            <article class="bento-card bento-vibe-card hero-animate" style="animation-delay: 0.35s;">
+              <div>
+                <span class="vibe-tag">SANCTUARY SPACE</span>
+                <h3 class="vibe-title" id="dynSanctuaryTitle">Work, Chill &amp; Connect</h3>
+                <p class="vibe-desc" id="dynSanctuaryDesc">Ruang nyaman dengan stopkontak di setiap meja &amp; Wi-Fi super kencang.</p>
+              </div>
+              <div class="vibe-amenities" id="dynAmenitiesList">
+                <span class="amenity-chip">🚬 Smoking Area</span>
+                <span class="amenity-chip">🚭 Non-Smoking</span>
+              </div>
+            </article>
+
+          </div><!-- /bento-subgrid -->
+
+        </div><!-- /bento-grid -->
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         3. VALUE PROPOSITIONS
+         ═══════════════════════════════════════════════ -->
+    <section class="values-compact-bar">
+      <div class="container">
+        <div class="values-pills-row" id="dynHighlightsRow">
+          <div class="value-pill-card">
+            <div class="value-pill-icon">☕</div>
+            <div>
+              <div class="value-pill-title">Quality Specialty Beans</div>
+              <div class="value-pill-desc">Roasting profil optimal</div>
+            </div>
+          </div>
+          <div class="value-pill-card">
+            <div class="value-pill-icon">🌿</div>
+            <div>
+              <div class="value-pill-title">Fresh Daily Food</div>
+              <div class="value-pill-desc">Dibuat hangat saat dipesan</div>
+            </div>
+          </div>
+          <div class="value-pill-card">
+            <div class="value-pill-icon">⚡</div>
+            <div>
+              <div class="value-pill-title">Fast Order via WA</div>
+              <div class="value-pill-desc">Dine-in, takeaway &amp; delivery</div>
+            </div>
+          </div>
+          <div class="value-pill-card">
+            <div class="value-pill-icon">🛵</div>
+            <div>
+              <div class="value-pill-title">Go-Food Available</div>
+              <div class="value-pill-desc">Tersedia di app pesan antar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         4. KISAH & FILOSOFI (Our Story)
+         ═══════════════════════════════════════════════ -->
+    <section class="story-section" id="story-full">
+      <div class="container">
+        <div class="story-grid">
+
+          <!-- Left: Text content -->
+          <div class="story-text-col">
+            <div class="section-heading-sm" id="dynStoryTag">OUR STORY &amp; PHILOSOPHY</div>
+            <h2 class="story-main-title" id="dynStoryTitle">We Serve Bitter<br>and Sweets</h2>
+            <p class="story-lead" id="dynStoryLead">
+              Lahir dari kecintaan pada kopi dan keinginan menciptakan ruang temu yang hangat bagi warga Pandeglang.
+            </p>
+            <p class="story-body" id="dynStoryP1">
+              Nama BITTS terinspirasi dari 'Bitter' dan 'Sweet' — dua sisi rasa yang tidak saling meniadakan, melainkan saling melengkapi. Sama seperti kehidupan, ada saatnya kita butuh kepahitan kopi untuk membangkitkan fokus, dan ada saatnya kita butuh manisnya kehangatan untuk merayakan hari.
+            </p>
+            <p class="story-body" id="dynStoryP2">
+              Kami memilih biji kopi Nusantara terbaik yang di-roast dengan presisi, diseduh oleh barista berpengalaman, dan disajikan dengan senyum ramah khas BITTS.
+            </p>
+          </div>
+
+          <!-- Right: Quote highlight -->
+          <div class="story-quote-col">
+            <div class="story-quote-card">
+              <div class="story-quote-mark">&ldquo;</div>
+              <p class="story-quote-text" id="dynStoryQuote">
+                Good coffee is not just a drink, it is a pause in a busy world.
+              </p>
+              <div class="story-quote-divider"></div>
+              <span class="story-quote-attr">— BITTS Coffee Philosophy</span>
+            </div>
+            <div class="story-accent-bar"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         5. MENU CATALOG
+         ═══════════════════════════════════════════════ -->
+    <section class="menu-catalog-section" id="catalog">
+      <div class="container">
+
+        <div class="section-title-wrap">
+          <div>
+            <div class="section-heading-sm">EXPLORE OUR CREATIONS</div>
+            <h2 class="section-heading-lg">Katalog Menu &amp; Harga</h2>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="catalog-controls">
+          <div class="category-filter-pills" id="categoryPillFilters">
+            <button class="cat-pill-btn active" data-cat="all">Semua Menu</button>
+            <button class="cat-pill-btn" data-cat="signature">⭐ Signature</button>
+            <button class="cat-pill-btn" data-cat="coffee">☕ Coffee</button>
+            <button class="cat-pill-btn" data-cat="non-coffee">🍵 Non-Coffee</button>
+            <button class="cat-pill-btn" data-cat="Snack">🍟 Snack &amp; Camilan</button>
+            <button class="cat-pill-btn" data-cat="food">🥪 Meals &amp; Food</button>
+            <button class="cat-pill-btn" data-cat="dessert">🥐 Pastry &amp; Sweets</button>
+          </div>
+          <div class="search-input-pill">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="liveSearchInput" placeholder="Cari nama menu...">
+          </div>
+        </div>
+
+        <!-- Cards Grid (rendered by app.js) -->
+        <div class="compact-menu-grid" id="compactMenuGrid"></div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════
+         7. LOCATION & VISIT
+         ═══════════════════════════════════════════════ -->
+    <section class="compact-visit-section" id="visit">
+      <div class="container">
+        <div class="visit-bento-grid">
+
+          <div class="visit-info-tile">
+            <div>
+              <div class="section-heading-sm">LOKASI &amp; KONTAK</div>
+              <h3 class="visit-section-title">Kunjungi BITTS<br>Pandeglang</h3>
+              <p class="visit-address" id="dynStoreAddress">
+                Jl. Ciwasiat No.21, Kec. Pandeglang,<br>
+                Kabupaten Pandeglang, Banten 42211
+              </p>
+
+              <div class="hours-box">
+                <div class="hours-label">Jam Buka:</div>
+                <div class="hours-detail">
+                  <span>Senin &ndash; Jumat</span>
+                  <strong id="dynHoursWeekday">08:00 &ndash; 22:00 WIB</strong>
+                </div>
+                <div class="hours-detail">
+                  <span>Sabtu &ndash; Minggu</span>
+                  <strong id="dynHoursWeekend">08:00 &ndash; 23:00 WIB</strong>
+                </div>
+              </div>
+
+              <!-- Sosial Media Row -->
+              <div class="visit-social-row">
+                <a href="https://instagram.com/bittscoffee" target="_blank" rel="noopener" class="visit-social-pill" id="dynVisitInstagram">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                  @bittscoffee
+                </a>
+                <a href="https://wa.me/6285179929290" target="_blank" rel="noopener" class="visit-social-pill wa" id="dynVisitWA">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                  </svg>
+                  <span id="dynWaDisplay">+62 851-7992-9290</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="visit-action-row">
+              <a href="https://maps.google.com/?q=Jl.+Ciwasiat+No.21+Pandeglang+Banten"
+                 target="_blank" rel="noopener" class="btn-pill-primary" id="dynMapsLink">
+                Buka Google Maps
+              </a>
+              <a href="https://wa.me/6285179929290" target="_blank" rel="noopener" class="btn-pill-secondary" id="dynWaLink">
+                WhatsApp Admin
+              </a>
+            </div>
+          </div>
+
+          <div class="visit-map-tile">
+            <iframe
+              id="dynMapsIframe"
+              src="https://maps.google.com/maps?q=Pandeglang+Banten+Indonesia&t=&z=14&ie=UTF8&iwloc=&output=embed"
+              title="Lokasi BITTS Coffee Pandeglang"
+              loading="lazy">
+            </iframe>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       8. FOOTER DIPERKAYA
+       ═══════════════════════════════════════════════ -->
+  <footer class="rich-footer">
+    <div class="container footer-grid">
+
+      <!-- Brand Column -->
+      <div class="footer-brand-col">
+        <img src="assets/bitts-logo-tight-white.png" alt="BITTS Logo" class="footer-logo-img">
+        <span class="footer-brand-name">BITTS COFFEE</span>
+        <span class="footer-tagline" id="dynFooterTagline">We Serve Bitter and Sweets</span>
+        <p class="footer-brand-desc">Specialty coffee & artisanal food di jantung Pandeglang, Banten.</p>
+        <div class="footer-social-row">
+          <a href="https://instagram.com/bittscoffee" target="_blank" rel="noopener"
+             class="footer-social-pill" id="dynInstagramFooter" title="Instagram @bittscoffee">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+            Instagram
+          </a>
+          <a href="https://wa.me/6285179929290" target="_blank" rel="noopener"
+             class="footer-social-pill" id="dynWhatsAppFooter" title="WhatsApp BITTS Coffee">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Column -->
+      <div class="footer-nav-col">
+        <h4 class="footer-col-title">Navigasi</h4>
+        <ul class="footer-nav-list">
+          <li><a href="#home">Beranda</a></li>
+          <li><a href="#catalog">Katalog Menu</a></li>
+          <li><a href="#story-full">Kisah & Filosofi</a></li>
+          <li><a href="#visit">Lokasi & Kontak</a></li>
+        </ul>
+      </div>
+
+      <!-- Hours Column -->
+      <div class="footer-hours-col">
+        <h4 class="footer-col-title">Jam Operasional</h4>
+        <div class="footer-hours-list">
+          <div class="footer-hours-row">
+            <span>Senin – Jumat</span>
+            <strong id="dynFooterWeekday">08:00 – 22:00 WIB</strong>
+          </div>
+          <div class="footer-hours-row">
+            <span>Sabtu – Minggu</span>
+            <strong id="dynFooterWeekend">08:00 – 23:00 WIB</strong>
+          </div>
+        </div>
+        <div class="footer-address-block">
+          <h4 class="footer-col-title" style="margin-top: 24px;">Alamat</h4>
+          <p id="dynFooterAddress">Jl. Ciwasiat No.21,<br>Pandeglang, Banten 42211</p>
+          <a href="https://maps.google.com/?q=BITTS+Coffee+Pandeglang" target="_blank"
+             rel="noopener" class="footer-maps-link" id="dynFooterMaps">
+            Buka di Google Maps →
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Copyright bar -->
+    <div class="footer-copyright-bar">
+      <div class="container">
+        <div class="footer-copyright-left">
+          <span id="dynFooterCopyright">© 2025 BITTS Coffee, Pandeglang — All rights reserved.</span>
+          <!-- Secret Gateway to Admin Portal -->
+          <a href="/admin" class="footer-secret-admin" title="Studio Admin (Atau tekan Ctrl+Shift+A)" aria-label="Akses Studio Admin">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </a>
+        </div>
+        <span class="footer-made-with">Crafted with ☕ in Pandeglang</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════
+       9. FLOATING WHATSAPP BUTTON
+       ═══════════════════════════════════════════════ -->
+  <div class="floating-wa-wrap" id="floatingWAWrap" style="display:none;">
+    <div class="floating-wa-tooltip" id="floatingWATooltip">Chat dengan kami! 👋</div>
+    <a href="#" class="floating-wa-btn" id="floatingWABtn" target="_blank" rel="noopener" title="Chat WhatsApp BITTS Coffee">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+      </svg>
+      <span class="floating-wa-pulse"></span>
+    </a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       10. ORDER MODAL (WhatsApp)
+       ═══════════════════════════════════════════════ -->
+  <div class="order-modal-backdrop" id="clientOrderModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="order-modal-card">
+      <div class="order-modal-header">
+        <h3 class="modal-heading" id="modalTitle">Detail Pesanan</h3>
+        <button id="closeOrderModalBtn" class="modal-close-btn" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="order-modal-body">
+        <img src="" alt="" id="modalImg" class="order-thumb-img">
+        <div class="modal-item-row">
+          <h4 class="modal-item-name" id="modalName">—</h4>
+          <span class="modal-item-price" id="modalPrice">Rp 0</span>
+        </div>
+        <p class="modal-item-desc" id="modalDesc"></p>
+
+        <label for="modalNotes" class="modal-notes-label">
+          Catatan Pesanan (suhu / gula / es / takeaway):
+        </label>
+        <input type="text" id="modalNotes" class="order-notes-input"
+               placeholder="Contoh: less ice, less sugar, bawa pulang...">
+
+        <button id="sendWaOrderBtn" class="btn-submit-order-wa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          Lanjut Pesan via WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
