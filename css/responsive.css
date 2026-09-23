@@ -207,6 +207,8 @@
   }
 
   .footer-brand-col, .footer-nav-col, .footer-hours-col { align-items: center; }
+  .footer-brand-lockup { text-align: left; }
+  .footer-brand-desc { max-width: 300px; text-align: center; }
   .footer-social-row { justify-content: center; }
   .footer-hours-row { justify-content: center; gap: 14px; }
 
