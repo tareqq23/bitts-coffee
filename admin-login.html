@@ -136,9 +136,9 @@
       </div>
       <form id="loginForm" novalidate>
         <div class="form-group">
-          <label class="form-label" for="usernameInput">Username</label>
+            <label class="form-label" for="usernameInput">Email Admin</label>
           <div class="input-wrapper">
-            <input type="text" id="usernameInput" class="form-input" placeholder="Masukkan username admin" autocomplete="username" autofocus required>
+              <input type="email" id="usernameInput" class="form-input" placeholder="Masukkan email admin" autocomplete="username" autofocus required>
           </div>
         </div>
         <div class="form-group">
@@ -166,6 +166,7 @@
     </div>
   </main>
 </div>
+<script type="module" src="js/admin-login.js"></script>
 <script>
   const pwdInput   = document.getElementById('passwordInput');
   const toggleBtn  = document.getElementById('togglePwdBtn');
@@ -193,15 +194,9 @@
     const btn = document.getElementById('loginBtn');
     btn.disabled = true; btn.classList.add('loading');
     try {
-      const res  = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ username, password }) });
+      const res  = await window.supabaseLogin({ method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ username, password }) });
       const data = await res.json();
       if (res.ok && data.success) {
-        if (remember) {
-          localStorage.setItem('bitts_admin_token', data.token);
-          localStorage.setItem('bitts_admin_user', username);
-        }
-        sessionStorage.setItem('bitts_admin_token', data.token);
-        sessionStorage.setItem('bitts_admin_user', username);
         window.location.href = '/admin';
       } else if (res.status === 429) {
         // Rate limit atau lockout
@@ -234,20 +229,9 @@
   ['usernameInput','passwordInput'].forEach(id => document.getElementById(id).addEventListener('input', hideError));
   
   // Auto-redirect jika sudah memiliki token aktif
-  const existingToken = localStorage.getItem('bitts_admin_token') || sessionStorage.getItem('bitts_admin_token');
-  if (existingToken) {
-    fetch('/api/auth/check', { headers: { 'Authorization': 'Bearer ' + existingToken } })
-      .then(r => r.json())
-      .then(d => {
-        if (d && d.authenticated) {
-          window.location.replace('/admin');
-        } else {
-          localStorage.removeItem('bitts_admin_token');
-          sessionStorage.removeItem('bitts_admin_token');
-        }
-      })
-      .catch(() => {});
-  }
+  window.supabaseAuthCheck().then(d => {
+    if (d && d.authenticated) window.location.replace('/admin');
+  }).catch(() => {});
 </script>
 </body>
 </html>

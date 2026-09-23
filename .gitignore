@@ -1,0 +1,52 @@
+# ==============================================
+#  BITTS Coffee - .gitignore
+#  File ini mencegah data sensitif diunggah
+#  ke repository publik (GitHub, dll.)
+# ==============================================
+
+# -- 1. CREDENTIALS & ENVIRONMENT -------------
+# File .env berisi username & password admin!
+# JANGAN PERNAH di-upload ke GitHub
+.env
+.env.local
+.env.*.local
+.env.production
+
+# -- 2. DATA SENSITIF -------------------------
+# Berisi token login admin yang masih aktif
+data/sessions.json
+
+# Berisi data menu dan konten CMS milik bisnis.
+# Hapus komentar di baris berikut jika ingin menyembunyikannya juga:
+# data/menu.json
+# data/cms.json
+
+# -- 3. FOTO YANG DIUPLOAD --------------------
+# Foto produk yang diunggah via admin panel.
+assets/uploads/*
+!assets/uploads/.gitkeep
+
+# -- 4. NODE.JS -------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# -- 5. SISTEM OPERASI ------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -- 6. EDITOR & IDE --------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# -- 7. LOG & CACHE ---------------------------
+*.log
+.cache/
+dist/
+build/

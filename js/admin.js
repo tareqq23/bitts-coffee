@@ -3,7 +3,8 @@
  * Comprehensive Admin Engine for REST API + Full CMS Management
  */
 
-import { formatRupiah } from './menuManager.js';
+import { formatRupiah, DEFAULT_MENU } from './menuManager.js';
+import { apiFetch, requireUser } from './supabaseClient.js';
 
 let currentItems = [];
 let currentCmsData = {};
@@ -12,27 +13,29 @@ let selectedCategory = 'all';
 let deleteCandidateId = null;
 
 // ── Auth Helper ──
-function getToken() {
-  return localStorage.getItem('bitts_admin_token') || sessionStorage.getItem('bitts_admin_token') || '';
-}
-
 function authHeaders() {
   return {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + getToken()
+    'Content-Type': 'application/json'
   };
 }
 
-function handleUnauthorized(data) {
-  if (data && data.error && data.error.includes('Login')) {
-    localStorage.removeItem('bitts_admin_token');
-    localStorage.removeItem('bitts_admin_user');
-    sessionStorage.removeItem('bitts_admin_token');
-    sessionStorage.removeItem('bitts_admin_user');
-    window.location.href = '/admin-login.html';
-    return true;
-  }
-  return false;
+function handleUnauthorized() {
+  window.location.href = '/admin-login.html';
+  return true;
+}
+
+function normalizeInstagramUrl(value) {
+  const input = String(value || '').trim();
+  if (!input) return '';
+  const urlMatch = input.match(/instagram\.com\/(?:https?:\/\/(?:www\.)?instagram\.com\/)?([^\/?#]+)/i);
+  const handle = urlMatch ? urlMatch[1] : input.replace(/^@+/, '').replace(/^\/+|\/+$/g, '');
+  return `https://www.instagram.com/${handle}/`;
+}
+
+function normalizeInstagramHandle(value) {
+  const url = normalizeInstagramUrl(value);
+  const match = url.match(/instagram\.com\/([^/]+)/i);
+  return match ? match[1] : '';
 }
 
 // Helper: Show Toast Notification
@@ -63,7 +66,7 @@ function fileToBase64(file) {
 // Upload Image to /api/upload
 async function uploadImageToServer(file) {
   const base64 = await fileToBase64(file);
-  const res = await fetch('/api/upload', {
+  const res = await apiFetch('/api/upload', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({
@@ -78,6 +81,9 @@ async function uploadImageToServer(file) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  requireUser().then(user => {
+    if (!user) window.location.replace('/admin-login.html');
+  });
   initTabs();
   loadAllData();
   setupMenuListeners();
@@ -114,21 +120,58 @@ function initTabs() {
    2. DATA LOADING & STATS
    ══════════════════════════════════════════════════════════ */
 async function loadAllData() {
+  const user = await requireUser();
+  if (!user) {
+    window.location.replace('/admin-login.html');
+    return;
+  }
   await loadMenuData();
   await loadCmsData(); // CMS data must load first — testimoni & settings depend on it
 }
 
 async function loadMenuData() {
   try {
-    const res = await fetch('/api/menu');
+    const res = await apiFetch('/api/menu');
     const result = await res.json();
     if (result.success && Array.isArray(result.data)) {
       currentItems = result.data;
+      if (result.source === 'local-backup') {
+        // Replace demo/default rows with the existing custom menu backup once.
+        const existingItems = await apiFetch('/api/menu', { preferDatabase: true });
+        const existingResult = await existingItems.json();
+        if (!existingItems.ok) throw new Error(existingResult.error || 'Tidak dapat membaca menu Supabase.');
+        const databaseItems = existingResult.source === 'supabase' ? existingResult.data : [];
+        if (result.removeDefault) {
+          for (const item of databaseItems) {
+            if (!item.id) continue;
+            const deleteRes = await apiFetch(`/api/menu/${item.id}`, { method: 'DELETE', headers: authHeaders() });
+            if (!deleteRes.ok) {
+              const deleteResult = await deleteRes.json();
+              throw new Error(deleteResult.error || 'Menu demo tidak dapat dihapus. Periksa policy RLS.');
+            }
+          }
+        }
+        const seeded = [];
+        for (const item of currentItems) {
+          const createRes = await apiFetch('/api/menu', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify(item)
+          });
+          const created = await createRes.json();
+          if (!createRes.ok || !created.data) {
+            throw new Error(created.error || `Menu "${item.name}" gagal dipindahkan ke Supabase.`);
+          }
+          seeded.push(created.data);
+        }
+        if (seeded.length === currentItems.length) currentItems = seeded;
+      }
     }
   } catch (err) {
     console.warn('API menu offline, fallback to localStorage', err);
+    showToast(err.message || 'Migrasi menu gagal. Periksa policy Supabase.', true);
     try {
-      const local = localStorage.getItem('bitts_menu_v1');
+      const local = localStorage.getItem('bitts_menu_items_v2');
       if (local) currentItems = JSON.parse(local);
     } catch (_) {}
   }
@@ -139,12 +182,24 @@ async function loadMenuData() {
 
 async function loadCmsData() {
   try {
-    const res = await fetch('/api/cms');
+    const res = await apiFetch('/api/cms');
     const result = await res.json();
     if (result.success && result.data) {
       currentCmsData = result.data;
       populateCmsForms(currentCmsData);
       populateSettingsForms(currentCmsData);
+      if (result.source === 'local-backup') {
+        const seedRes = await apiFetch('/api/cms', {
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify(currentCmsData)
+        });
+        const seedResult = await seedRes.json();
+        if (!seedRes.ok || !seedResult.success) {
+          throw new Error(seedResult.error || 'CMS lokal gagal dipindahkan ke Supabase.');
+        }
+        currentCmsData = seedResult.data;
+      }
     }
   } catch (err) {
     console.error('Failed to load CMS from API:', err);
@@ -285,7 +340,7 @@ function renderTable() {
 // Global actions exposed for inline click handlers
 window.toggleAvailability = async function(id) {
   try {
-    const res = await fetch(`/api/menu/${id}/availability`, {
+    const res = await apiFetch(`/api/menu/${id}/availability`, {
       method: 'PATCH',
       headers: authHeaders()
     });
@@ -404,14 +459,14 @@ function setupMenuListeners() {
         let res;
         if (id) {
           // Update
-          res = await fetch(`/api/menu/${id}`, {
+          res = await apiFetch(`/api/menu/${id}`, {
             method: 'PUT',
             headers: authHeaders(),
             body: JSON.stringify(payload)
           });
         } else {
           // Add new
-          res = await fetch('/api/menu', {
+          res = await apiFetch('/api/menu', {
             method: 'POST',
             headers: authHeaders(),
             body: JSON.stringify(payload)
@@ -436,7 +491,7 @@ function setupMenuListeners() {
   document.getElementById('confirmDeleteBtn')?.addEventListener('click', async () => {
     if (!deleteCandidateId) return;
     try {
-      const res = await fetch(`/api/menu/${deleteCandidateId}`, {
+      const res = await apiFetch(`/api/menu/${deleteCandidateId}`, {
         method: 'DELETE',
         headers: authHeaders()
       });
@@ -659,8 +714,8 @@ function setupCmsForms() {
           address: document.getElementById('contactAddressInput').value.trim(),
           whatsapp: document.getElementById('contactWaInput').value.trim(),
           whatsappDisplay: document.getElementById('contactWaDisplayInput').value.trim(),
-          instagram: document.getElementById('contactIgInput').value.trim(),
-          instagramUrl: `https://instagram.com/${document.getElementById('contactIgInput').value.trim().replace('@', '')}`,
+          instagram: normalizeInstagramHandle(document.getElementById('contactIgInput').value),
+          instagramUrl: normalizeInstagramUrl(document.getElementById('contactIgInput').value),
           mapsUrl: document.getElementById('contactMapsUrlInput').value.trim(),
           mapsEmbed: document.getElementById('contactMapsEmbedInput').value.trim()
         },
@@ -680,7 +735,7 @@ function setupCmsForms() {
 
 async function saveCmsToServer(partialPayload, sectionName) {
   try {
-    const res = await fetch('/api/cms', {
+    const res = await apiFetch('/api/cms', {
       method: 'PUT',
       headers: authHeaders(),
       body: JSON.stringify(partialPayload)
@@ -717,8 +772,10 @@ function setupBackupTab() {
   if (exportBtn) {
     exportBtn.addEventListener('click', async () => {
       try {
-        const res = await fetch('/api/backup');
+        const res = await apiFetch('/api/backup', { headers: authHeaders() });
         const backup = await res.json();
+        if (res.status === 401) { handleUnauthorized(backup); return; }
+        if (!backup.success) throw new Error(backup.error || 'Backup gagal dibuat');
         const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -742,7 +799,7 @@ function setupBackupTab() {
       reader.onload = async (evt) => {
         try {
           const parsed = JSON.parse(evt.target.result);
-          const res = await fetch('/api/restore', {
+          const res = await apiFetch('/api/restore', {
             method: 'POST',
             headers: authHeaders(),
             body: JSON.stringify(parsed)

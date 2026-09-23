@@ -10,13 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/bitts-logo-tight-black.png">
   <link rel="stylesheet" href="css/admin.css">
-  <!-- Auth Guard: redirect to login if not authenticated -->
-  <script>
-    (function() {
-      const token = localStorage.getItem('bitts_admin_token') || sessionStorage.getItem('bitts_admin_token');
-      if (!token) { window.location.replace('/admin-login.html'); }
-    })();
-  </script>
 </head>
 <body>
 
@@ -687,17 +680,10 @@
   <script>
     // Logout handler
     document.getElementById('logoutBtn').addEventListener('click', async () => {
-      const token = localStorage.getItem('bitts_admin_token') || sessionStorage.getItem('bitts_admin_token');
       try {
-        await fetch('/api/logout', {
-          method: 'POST',
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
+        const { supabase } = await import('./js/supabaseClient.js');
+        await supabase.auth.signOut();
       } catch(_) {}
-      localStorage.removeItem('bitts_admin_token');
-      localStorage.removeItem('bitts_admin_user');
-      sessionStorage.removeItem('bitts_admin_token');
-      sessionStorage.removeItem('bitts_admin_user');
       window.location.href = '/admin-login.html';
     });
 

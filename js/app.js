@@ -1,10 +1,35 @@
-import { getStoredMenus, formatRupiah, createWhatsAppOrderLink } from './menuManager.js';
+import { getStoredMenus, formatRupiah } from './menuManager.js';
+import { apiFetch, requireUser, supabase } from './supabaseClient.js';
 
 let allMenuItems = [];
 let currentCategory = 'all';
 let currentSearch = '';
-let selectedItemForOrder = null;
 let currentCms = null;
+let cartItems = [];
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[character]));
+}
+
+function normalizeInstagramUrl(value) {
+  const input = String(value || '').trim();
+  if (!input) return '';
+  const urlMatch = input.match(/instagram\.com\/(?:https?:\/\/(?:www\.)?instagram\.com\/)?([^\/?#]+)/i);
+  const handle = urlMatch ? urlMatch[1] : input.replace(/^@+/, '').replace(/^\/+|\/+$/g, '');
+  return `https://www.instagram.com/${handle}/`;
+}
+
+function normalizeInstagramHandle(value) {
+  const url = normalizeInstagramUrl(value);
+  const match = url.match(/instagram\.com\/([^/]+)/i);
+  return match ? match[1] : '';
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCms();
@@ -27,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    ============================================= */
 async function loadCms() {
   try {
-    const res = await fetch('/api/cms');
+    const res = await apiFetch('/api/cms');
     const result = await res.json();
     if (result.success && result.data) {
       currentCms = result.data;
@@ -52,7 +77,7 @@ function renderCmsContent(cms) {
     const ctaS  = document.getElementById('dynHeroCtaSecondary');
 
     if (badge && s.heroBadge) badge.textContent = `✦ ${s.heroBadge}`;
-    if (title && s.slogan)    title.innerHTML = s.slogan.replace(/\n/g, '<br>');
+    if (title && s.slogan)    title.innerHTML = escapeHtml(s.slogan).replace(/\n/g, '<br>');
     if (desc  && s.description) desc.textContent = s.description;
     if (img   && s.heroImage) img.src = s.heroImage;
     if (ctaP  && s.heroCtaPrimary)   ctaP.childNodes[ctaP.childNodes.length-1].textContent = ' ' + s.heroCtaPrimary;
@@ -65,10 +90,10 @@ function renderCmsContent(cms) {
     if (row) {
       row.innerHTML = cms.highlights.map(h => `
         <div class="value-pill-card">
-          <div class="value-pill-icon">${h.icon || '✦'}</div>
+          <div class="value-pill-icon">${escapeHtml(h.icon || '✦')}</div>
           <div>
-            <div class="value-pill-title">${h.title}</div>
-            <div class="value-pill-desc">${h.desc}</div>
+            <div class="value-pill-title">${escapeHtml(h.title)}</div>
+            <div class="value-pill-desc">${escapeHtml(h.desc)}</div>
           </div>
         </div>
       `).join('');
@@ -85,7 +110,7 @@ function renderCmsContent(cms) {
     if (st && sn.title) st.textContent = sn.title;
     if (sd && sn.desc)  sd.textContent = sn.desc;
     if (am && Array.isArray(sn.amenities) && sn.amenities.length > 0) {
-      am.innerHTML = sn.amenities.map(a => `<span class="amenity-chip">✨ ${a}</span>`).join('');
+      am.innerHTML = sn.amenities.map(a => `<span class="amenity-chip">✨ ${escapeHtml(a)}</span>`).join('');
     }
   }
 
@@ -107,7 +132,7 @@ function renderCmsContent(cms) {
     const footerAddr = document.getElementById('dynFooterAddress');
     const footerWaDisp = document.getElementById('dynWaDisplay');
 
-    if (addr     && c.address)      addr.innerHTML = c.address.replace(/\n/g, '<br>');
+    if (addr     && c.address)      addr.innerHTML = escapeHtml(c.address).replace(/\n/g, '<br>');
     if (maps     && c.mapsUrl)      maps.href = c.mapsUrl;
     if (wa       && c.whatsapp)     wa.href = `https://wa.me/${c.whatsapp}`;
     if (waDisp   && c.whatsappDisplay) waDisp.textContent = c.whatsappDisplay;
@@ -128,14 +153,15 @@ function renderCmsContent(cms) {
       }
       iframe.src = embedUrl;
     }
-    if (igFooter && c.instagramUrl) igFooter.href = c.instagramUrl;
+    const instagramUrl = normalizeInstagramUrl(c.instagramUrl || c.instagram);
+    if (igFooter && instagramUrl) igFooter.href = instagramUrl;
     if (waFooter && c.whatsapp)     waFooter.href = `https://wa.me/${c.whatsapp}`;
-    if (visitIG  && c.instagramUrl) { visitIG.href = c.instagramUrl; if (c.instagram) visitIG.lastChild.textContent = ` @${c.instagram}`; }
+    if (visitIG  && instagramUrl) { visitIG.href = instagramUrl; visitIG.lastChild.textContent = ` @${normalizeInstagramHandle(c.instagramUrl || c.instagram)}`; }
     if (visitWA  && c.whatsapp)     visitWA.href = `https://wa.me/${c.whatsapp}`;
     if (navWaBtn && c.whatsapp)     navWaBtn.href = `https://wa.me/${c.whatsapp}`;
     if (statusMaps && c.mapsUrl)    statusMaps.href = c.mapsUrl;
     if (footerMaps && c.mapsUrl)    footerMaps.href = c.mapsUrl;
-    if (footerAddr && c.address)    footerAddr.innerHTML = c.address.replace(/\n/g, '<br>');
+    if (footerAddr && c.address)    footerAddr.innerHTML = escapeHtml(c.address).replace(/\n/g, '<br>');
   }
 
   if (cms.hours) {
@@ -162,7 +188,7 @@ function renderCmsContent(cms) {
     const quote = document.getElementById('dynStoryQuote');
 
     if (tag   && st.tag)   tag.textContent   = st.tag;
-    if (title && st.title) title.innerHTML   = st.title.replace(/\n/g, '<br>');
+    if (title && st.title) title.innerHTML   = escapeHtml(st.title).replace(/\n/g, '<br>');
     if (lead  && st.lead)  lead.textContent  = st.lead;
     if (p1    && st.p1)    p1.textContent    = st.p1;
     if (p2    && st.p2)    p2.textContent    = st.p2;
@@ -310,7 +336,7 @@ function initMobileNav() {
    ============================================= */
 async function loadCatalog() {
   try {
-    const res = await fetch('/api/menu');
+    const res = await apiFetch('/api/menu');
     const result = await res.json();
     if (result.success && Array.isArray(result.data)) {
       allMenuItems = result.data;
@@ -354,26 +380,110 @@ function renderMenu() {
   grid.innerHTML = filtered.map(item => `
     <article class="compact-menu-card" data-id="${item.id}">
       <div class="card-img-wrap">
-        <img src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.src='assets/images/menu-coffee.jpg'">
-        ${item.badge ? `<span class="card-badge-pill">${item.badge}</span>` : ''}
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.src='assets/images/menu-coffee.jpg'">
+        ${item.badge ? `<span class="card-badge-pill">${escapeHtml(item.badge)}</span>` : ''}
         ${!item.isAvailable ? `<div class="card-sold-out-overlay">SOLD OUT</div>` : ''}
       </div>
       <div class="card-content-wrap">
-        <span class="card-cat-label">${item.categoryName || item.category}</span>
-        <h3 class="card-title">${item.name}</h3>
-        <p class="card-desc">${item.description || ''}</p>
+        <span class="card-cat-label">${escapeHtml(item.categoryName || item.category)}</span>
+        <h3 class="card-title">${escapeHtml(item.name)}</h3>
+        <p class="card-desc">${escapeHtml(item.description || '')}</p>
         <div class="card-footer-row">
           <span class="card-price">${formatRupiah(item.price)}</span>
-          <button class="btn-card-wa" onclick="window.openOrderModal('${item.id}')" ${!item.isAvailable ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
+          <button class="btn-card-wa" data-order-id="${escapeHtml(item.id)}" ${!item.isAvailable ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
-            Pesan
+            Tambah
           </button>
         </div>
       </div>
     </article>
   `).join('');
+
+  grid.onclick = (event) => {
+    const orderButton = event.target.closest('[data-order-id]');
+    if (orderButton) addToCart(orderButton.dataset.orderId);
+  };
+}
+
+function formatWhatsAppMessage(notes) {
+  const lines = cartItems.map((entry, index) => {
+    const subtotal = entry.item.price * entry.quantity;
+    return `${index + 1}. ${entry.item.name}\n   ${entry.quantity} x ${formatRupiah(entry.item.price)} = ${formatRupiah(subtotal)}`;
+  });
+  const total = cartItems.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0);
+  return [
+    'Halo Admin BITTS Coffee, saya ingin memesan:',
+    '',
+    ...lines,
+    '',
+    `Total sementara: ${formatRupiah(total)}`,
+    notes.trim() ? `Catatan: ${notes.trim()}` : '',
+    '',
+    'Mohon konfirmasi ketersediaan dan total pembayarannya. Terima kasih!'
+  ].filter(Boolean).join('\n');
+}
+
+function updateCartBadge() {
+  const count = cartItems.reduce((sum, entry) => sum + entry.quantity, 0);
+  const badge = document.getElementById('cartCountBadge');
+  if (badge) badge.textContent = count;
+}
+
+function renderCart() {
+  const list = document.getElementById('cartItemsList');
+  const totalEl = document.getElementById('cartTotalPrice');
+  const sendBtn = document.getElementById('sendWaOrderBtn');
+  if (!list || !totalEl || !sendBtn) return;
+
+  if (!cartItems.length) {
+    list.innerHTML = '<div class="cart-empty-state">Keranjang masih kosong.<br>Pilih menu yang ingin dipesan.</div>';
+    totalEl.textContent = formatRupiah(0);
+    sendBtn.disabled = true;
+    updateCartBadge();
+    return;
+  }
+
+  list.innerHTML = cartItems.map(entry => `
+    <div class="cart-item-row" data-cart-id="${escapeHtml(entry.item.id)}">
+      <div class="cart-item-info">
+        <strong>${escapeHtml(entry.item.name)}</strong>
+        <span>${formatRupiah(entry.item.price)} / item</span>
+      </div>
+      <div class="cart-item-actions">
+        <button type="button" class="cart-qty-btn" data-cart-action="decrease" aria-label="Kurangi jumlah">−</button>
+        <span>${entry.quantity}</span>
+        <button type="button" class="cart-qty-btn" data-cart-action="increase" aria-label="Tambah jumlah">+</button>
+        <button type="button" class="cart-remove-btn" data-cart-action="remove" aria-label="Hapus dari keranjang">&times;</button>
+      </div>
+    </div>
+  `).join('');
+
+  const total = cartItems.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0);
+  totalEl.textContent = formatRupiah(total);
+  sendBtn.disabled = false;
+  updateCartBadge();
+}
+
+function addToCart(itemId) {
+  const item = allMenuItems.find(menuItem => String(menuItem.id) === String(itemId));
+  if (!item || item.isAvailable === false) return;
+  const existing = cartItems.find(entry => String(entry.item.id) === String(itemId));
+  if (existing) existing.quantity += 1;
+  else cartItems.push({ item, quantity: 1 });
+  renderCart();
+  const button = document.querySelector(`[data-order-id="${CSS.escape(String(itemId))}"]`);
+  if (button) {
+    const original = button.innerHTML;
+    button.textContent = 'Ditambahkan';
+    setTimeout(() => { button.innerHTML = original; }, 900);
+  }
+}
+
+function openCart() {
+  renderCart();
+  document.getElementById('clientOrderModal')?.classList.add('active');
 }
 
 function setupFilters() {
@@ -450,6 +560,9 @@ function initModalEvents() {
   const backdrop = document.getElementById('clientOrderModal');
   const closeBtn = document.getElementById('closeOrderModalBtn');
   const sendBtn = document.getElementById('sendWaOrderBtn');
+  const openCartBtn = document.getElementById('openCartBtn');
+
+  openCartBtn?.addEventListener('click', openCart);
 
   if (closeBtn && backdrop) {
     closeBtn.addEventListener('click', () => backdrop.classList.remove('active'));
@@ -458,80 +571,54 @@ function initModalEvents() {
 
   if (sendBtn) {
     sendBtn.addEventListener('click', () => {
-      if (!selectedItemForOrder) return;
+      if (!cartItems.length) return;
       const notes = document.getElementById('modalNotes')?.value || '';
-      
-      let link = createWhatsAppOrderLink(selectedItemForOrder, notes);
-      // If customized WA number exists in CMS, swap the number
-      if (currentCms?.contact?.whatsapp) {
-        link = link.replace(/wa\.me\/\d+/, `wa.me/${currentCms.contact.whatsapp}`);
-      }
+      const number = currentCms?.contact?.whatsapp || '6285179929290';
+      const link = `https://wa.me/${number}?text=${encodeURIComponent(formatWhatsAppMessage(notes))}`;
       window.open(link, '_blank');
       backdrop.classList.remove('active');
     });
   }
+
+  backdrop?.addEventListener('click', (event) => {
+    const actionButton = event.target.closest('[data-cart-action]');
+    const row = event.target.closest('[data-cart-id]');
+    if (!actionButton || !row) return;
+    const entry = cartItems.find(item => String(item.item.id) === row.dataset.cartId);
+    if (!entry) return;
+    if (actionButton.dataset.cartAction === 'increase') entry.quantity += 1;
+    if (actionButton.dataset.cartAction === 'decrease') entry.quantity -= 1;
+    if (actionButton.dataset.cartAction === 'remove' || entry.quantity <= 0) {
+      cartItems = cartItems.filter(item => String(item.item.id) !== row.dataset.cartId);
+    }
+    renderCart();
+  });
 }
 
 window.openOrderModal = function(itemId) {
-  const item = allMenuItems.find(i => i.id === itemId);
-  if (!item) return;
-  selectedItemForOrder = item;
-
-  const el = (id) => document.getElementById(id);
-  if (el('modalTitle')) el('modalTitle').textContent = 'Detail Pesanan';
-  if (el('modalName')) el('modalName').textContent = item.name;
-  if (el('modalPrice')) el('modalPrice').textContent = formatRupiah(item.price);
-  if (el('modalDesc')) el('modalDesc').textContent = item.description || '';
-  if (el('modalImg')) { el('modalImg').src = item.image; el('modalImg').alt = item.name; }
-  if (el('modalNotes')) el('modalNotes').value = '';
-
-  document.getElementById('clientOrderModal')?.classList.add('active');
+  addToCart(itemId);
+  openCart();
 };
 
 /* =============================================
    ADMIN QUICK-BAR & SHORTCUTS (Ctrl+Shift+A)
    ============================================= */
 function initAdminQuickBarAndShortcuts() {
-  const token = localStorage.getItem('bitts_admin_token') || sessionStorage.getItem('bitts_admin_token');
-  const user  = localStorage.getItem('bitts_admin_user')  || sessionStorage.getItem('bitts_admin_user') || 'admin';
   const quickBar = document.getElementById('bittsAdminQuickBar');
   const userSpan = document.getElementById('adminQuickUserName');
   const logoutBtn = document.getElementById('quickLogoutBtn');
 
   // 1. Tampilkan Admin Quick Bar jika token valid
-  if (token && quickBar) {
-    // Validasi token ke server di latar belakang
-    fetch('/api/auth/check', { headers: { 'Authorization': 'Bearer ' + token } })
-      .then(r => r.json())
-      .then(d => {
-        if (d && d.authenticated) {
-          quickBar.style.display = 'block';
-          if (userSpan) userSpan.textContent = user;
-        } else {
-          // Token kadaluarsa atau tidak valid di server
-          localStorage.removeItem('bitts_admin_token');
-          sessionStorage.removeItem('bitts_admin_token');
-          quickBar.style.display = 'none';
-        }
-      })
-      .catch(() => {
-        // Fallback: tampilkan jika offline
-        quickBar.style.display = 'block';
-        if (userSpan) userSpan.textContent = user;
-      });
+  if (quickBar) {
+    requireUser().then(user => {
+      if (!user) return;
+      quickBar.style.display = 'block';
+      if (userSpan) userSpan.textContent = user.email || 'admin';
+    });
 
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
-        try {
-          await fetch('/api/logout', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
-        } catch(_) {}
-        localStorage.removeItem('bitts_admin_token');
-        localStorage.removeItem('bitts_admin_user');
-        sessionStorage.removeItem('bitts_admin_token');
-        sessionStorage.removeItem('bitts_admin_user');
+        await supabase.auth.signOut();
         quickBar.style.display = 'none';
       });
     }
