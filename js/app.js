@@ -160,7 +160,7 @@ function renderCmsContent(cms) {
     if (waFooter && c.whatsapp)     waFooter.href = `https://wa.me/${c.whatsapp}`;
     if (visitIG  && instagramUrl) { visitIG.href = instagramUrl; visitIG.lastChild.textContent = ` @${normalizeInstagramHandle(c.instagramUrl || c.instagram)}`; }
     if (visitWA  && c.whatsapp)     visitWA.href = `https://wa.me/${c.whatsapp}`;
-    if (navWaBtn && c.whatsapp)     navWaBtn.href = `https://wa.me/${c.whatsapp}`;
+    if (navWaBtn)                   navWaBtn.href = '#catalog';
     if (statusMaps && c.mapsUrl)    statusMaps.href = c.mapsUrl;
     if (footerMaps && c.mapsUrl)    footerMaps.href = c.mapsUrl;
     if (footerAddr && c.address)    footerAddr.innerHTML = escapeHtml(c.address).replace(/\n/g, '<br>');
