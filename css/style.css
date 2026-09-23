@@ -878,6 +878,48 @@ button {
   color: var(--text-secondary);
 }
 
+.menu-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.menu-result-count {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.menu-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-page-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.menu-page-btn:hover:not(:disabled),
+.menu-page-btn.active {
+  background: var(--accent-brand);
+  border-color: var(--accent-brand);
+  color: #FFFFFF;
+}
+
+.menu-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
 /* ==========================================================================
    COMPACT LOCATION & FOOTER
    ========================================================================== */
@@ -1912,6 +1954,43 @@ button {
               box-shadow 0.3s ease;
 }
 
+.floating-cart-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.3);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.floating-cart-btn:hover {
+  background: var(--accent-brand-hover);
+  transform: translateY(-2px) scale(1.06);
+}
+
+#floatingCartCount {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border: 2px solid var(--bg-dark);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
 .floating-wa-btn:hover {
   transform: scale(1.1) translateY(-2px);
   box-shadow: 0 14px 40px rgba(37, 211, 102, 0.55);
@@ -1932,6 +2011,9 @@ button {
 }
 
 .floating-wa-tooltip {
+  position: absolute;
+  right: 0;
+  bottom: 70px;
   background: var(--bg-dark);
   color: #FFFFFF;
   font-size: 0.82rem;
@@ -1960,6 +2042,7 @@ button {
     width: 52px;
     height: 52px;
   }
+  .floating-cart-btn { width: 46px; height: 46px; }
 }
 
 /* ==========================================================================

@@ -229,9 +229,16 @@
   ['usernameInput','passwordInput'].forEach(id => document.getElementById(id).addEventListener('input', hideError));
   
   // Auto-redirect jika sudah memiliki token aktif
-  window.supabaseAuthCheck().then(d => {
-    if (d && d.authenticated) window.location.replace('/admin');
-  }).catch(() => {});
+  const checkSupabaseSession = () => {
+    if (typeof window.supabaseAuthCheck !== 'function') {
+      setTimeout(checkSupabaseSession, 50);
+      return;
+    }
+    window.supabaseAuthCheck().then(d => {
+      if (d && d.authenticated) window.location.replace('/admin');
+    }).catch(() => {});
+  };
+  checkSupabaseSession();
 </script>
 </body>
 </html>

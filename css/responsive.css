@@ -36,24 +36,48 @@
 }
 
 @media (max-width: 768px) {
+  :root { --mobile-gutter: 16px; }
+
+  html { font-size: 15px; }
+
+  body { padding-bottom: env(safe-area-inset-bottom); }
+
+  .container {
+    width: calc(100% - (var(--mobile-gutter) * 2));
+  }
+
   .header-wrapper {
-    top: 10px;
+    top: max(8px, env(safe-area-inset-top));
     padding: 0 10px;
   }
 
   .compact-navbar {
     padding: 6px 12px;
+    min-height: 48px;
   }
+
+  .brand-logo-img { height: 24px; }
+  .brand-title-compact { font-size: 1rem; letter-spacing: 1.5px; }
+
+  .nav-actions-compact { gap: 5px; }
+
+  .btn-order-compact {
+    padding: 9px 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.4px;
+  }
+
+  .btn-order-compact svg { display: none; }
 
   .nav-links-compact {
     position: fixed;
     top: 64px;
     left: 16px;
     right: 16px;
-    background: #181513;
-    border: 1px solid var(--border-glass);
+    background: rgba(17, 17, 17, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius-md);
-    padding: 20px;
+    padding: 14px;
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -67,15 +91,40 @@
 
   .mobile-nav-btn {
     display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .nav-item-link {
+    display: block;
+    width: 100%;
+    padding: 9px 4px;
+    font-size: 0.85rem;
   }
 
   .bento-card {
-    padding: 24px;
+    padding: 20px;
+    border-radius: var(--radius-md);
   }
 
+  .hero-bento-section { padding: 22px 0 28px; }
+
   .hero-editorial-title {
-    font-size: 2.2rem;
+    font-size: clamp(2rem, 9vw, 2.35rem);
   }
+
+  .hero-editorial-desc { font-size: 0.88rem; }
+  .hero-actions-row { flex-direction: column; align-items: stretch; gap: 9px; }
+  .hero-actions-row > a { justify-content: center; }
+
+  .bento-visual-tile img {
+    min-height: 240px;
+    max-height: 300px;
+  }
+
+  .bento-subgrid { gap: 12px; }
+  .bento-status-card, .bento-vibe-card { min-height: 190px; }
 
   .bento-subgrid {
     grid-template-columns: 1fr;
@@ -88,19 +137,95 @@
   .catalog-controls {
     flex-direction: column;
     align-items: stretch;
+    padding: 10px;
+    gap: 10px;
+    min-width: 0;
   }
+
+  .category-filter-pills {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .section-title-wrap { align-items: flex-start; gap: 12px; }
+  .section-heading-lg { font-size: 1.8rem; }
+  .btn-cart-trigger { padding: 9px 12px; font-size: 0.74rem; }
 
   .search-input-pill {
     width: 100%;
   }
 
   .compact-menu-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
+
+  .menu-pagination {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .menu-result-count { text-align: center; }
+  .menu-page-controls { justify-content: center; }
+
+  .card-img-wrap { height: 135px; }
+  .card-content-wrap { padding: 12px; }
+  .card-title { font-size: 1rem; }
+  .card-desc { font-size: 0.74rem; margin-bottom: 10px; }
+  .card-price { font-size: 0.88rem; }
+  .btn-card-wa { padding: 7px 9px; font-size: 0.7rem; }
+  .btn-card-wa svg { display: none; }
+
+  .visit-info-tile { padding: 22px 20px; }
+  .visit-section-title { font-size: 1.75rem; }
+  .visit-map-tile { height: 260px; }
+  .visit-action-row > a { flex: 1 1 140px; justify-content: center; text-align: center; }
+
+  .order-modal-backdrop { padding: 10px; align-items: flex-end; }
+  .order-modal-card {
+    max-height: min(88vh, 680px);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+  .order-modal-body { padding: 18px; }
+  .cart-item-row { align-items: flex-start; }
+  .cart-item-actions { gap: 6px; }
 
   .footer-inner {
     flex-direction: column;
     text-align: center;
     gap: 16px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    text-align: center;
+  }
+
+  .footer-brand-col, .footer-nav-col, .footer-hours-col { align-items: center; }
+  .footer-social-row { justify-content: center; }
+  .footer-hours-row { justify-content: center; gap: 14px; }
+
+  .floating-wa-wrap { right: 14px; bottom: max(14px, env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 420px) {
+  .compact-menu-grid { grid-template-columns: 1fr; }
+  .card-img-wrap { height: 180px; }
+  .btn-order-compact { max-width: 104px; overflow: hidden; text-overflow: ellipsis; }
+  .hero-editorial-title { font-size: 2rem; }
+  .hours-detail { flex-direction: column; gap: 2px; }
+  .hours-detail strong { font-size: 0.82rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -277,6 +277,7 @@
 
         <!-- Cards Grid (rendered by app.js) -->
         <div class="compact-menu-grid" id="compactMenuGrid"></div>
+        <div class="menu-pagination" id="menuPagination" aria-label="Navigasi halaman menu"></div>
 
       </div>
     </section>
@@ -445,6 +446,12 @@
        9. FLOATING WHATSAPP BUTTON
        ═══════════════════════════════════════════════ -->
   <div class="floating-wa-wrap" id="floatingWAWrap" style="display:none;">
+    <button type="button" class="floating-cart-btn" id="floatingCartBtn" aria-label="Buka keranjang pesanan" title="Buka keranjang pesanan">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/><path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 8H6"/>
+      </svg>
+      <span id="floatingCartCount">0</span>
+    </button>
     <div class="floating-wa-tooltip" id="floatingWATooltip">Chat dengan kami! 👋</div>
     <a href="#" class="floating-wa-btn" id="floatingWABtn" target="_blank" rel="noopener" title="Chat WhatsApp BITTS Coffee">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

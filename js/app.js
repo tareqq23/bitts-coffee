@@ -6,6 +6,8 @@ let currentCategory = 'all';
 let currentSearch = '';
 let currentCms = null;
 let cartItems = [];
+let menuPage = 1;
+const MENU_PAGE_SIZE = 12;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, character => ({
@@ -372,12 +374,17 @@ function renderMenu() {
     return matchCat && matchSearch;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / MENU_PAGE_SIZE));
+  menuPage = Math.min(menuPage, totalPages);
+  const pageItems = filtered.slice((menuPage - 1) * MENU_PAGE_SIZE, menuPage * MENU_PAGE_SIZE);
+
   if (filtered.length === 0) {
     grid.innerHTML = `<div class="empty-catalog-box"><p>Tidak ada menu yang cocok 🥲</p><p style="font-size:0.8rem;color:#666;margin-top:6px;">Coba kata kunci lain atau ubah filter kategori</p></div>`;
+    renderPagination(0, 0);
     return;
   }
 
-  grid.innerHTML = filtered.map(item => `
+  grid.innerHTML = pageItems.map(item => `
     <article class="compact-menu-card" data-id="${item.id}">
       <div class="card-img-wrap">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.src='assets/images/menu-coffee.jpg'">
@@ -405,30 +412,64 @@ function renderMenu() {
     const orderButton = event.target.closest('[data-order-id]');
     if (orderButton) addToCart(orderButton.dataset.orderId);
   };
+  renderPagination(filtered.length, totalPages);
+}
+
+function renderPagination(totalItems, totalPages) {
+  const pagination = document.getElementById('menuPagination');
+  if (!pagination) return;
+  if (totalPages <= 1) {
+    pagination.innerHTML = totalItems ? `<span class="menu-result-count">Menampilkan ${totalItems} menu</span>` : '';
+    return;
+  }
+  const start = (menuPage - 1) * MENU_PAGE_SIZE + 1;
+  const end = Math.min(menuPage * MENU_PAGE_SIZE, totalItems);
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1)
+    .map(page => `<button type="button" class="menu-page-btn ${page === menuPage ? 'active' : ''}" data-menu-page="${page}" aria-label="Halaman ${page}">${page}</button>`)
+    .join('');
+  pagination.innerHTML = `
+    <span class="menu-result-count">Menampilkan ${start}-${end} dari ${totalItems} menu</span>
+    <div class="menu-page-controls">
+      <button type="button" class="menu-page-btn" data-menu-page="${menuPage - 1}" ${menuPage === 1 ? 'disabled' : ''} aria-label="Halaman sebelumnya">&larr;</button>
+      ${pages}
+      <button type="button" class="menu-page-btn" data-menu-page="${menuPage + 1}" ${menuPage === totalPages ? 'disabled' : ''} aria-label="Halaman berikutnya">&rarr;</button>
+    </div>`;
+  pagination.querySelectorAll('[data-menu-page]').forEach(button => {
+    button.addEventListener('click', () => {
+      const targetPage = Number(button.dataset.menuPage);
+      if (targetPage < 1 || targetPage > totalPages) return;
+      menuPage = targetPage;
+      renderMenu();
+      document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 }
 
 function formatWhatsAppMessage(notes) {
   const lines = cartItems.map((entry, index) => {
     const subtotal = entry.item.price * entry.quantity;
-    return `${index + 1}. ${entry.item.name}\n   ${entry.quantity} x ${formatRupiah(entry.item.price)} = ${formatRupiah(subtotal)}`;
+    return `${index + 1}. ${entry.item.name} x${entry.quantity} - ${formatRupiah(subtotal)}`;
   });
   const total = cartItems.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0);
   return [
-    'Halo Admin BITTS Coffee, saya ingin memesan:',
+    'Halo BITTS Coffee, saya ingin memesan:',
     '',
+    '*Daftar Pesanan*',
     ...lines,
     '',
-    `Total sementara: ${formatRupiah(total)}`,
-    notes.trim() ? `Catatan: ${notes.trim()}` : '',
+    `*Total: ${formatRupiah(total)}*`,
+    notes.trim() ? `\nCatatan: ${notes.trim()}` : '',
     '',
-    'Mohon konfirmasi ketersediaan dan total pembayarannya. Terima kasih!'
+    'Mohon konfirmasi ketersediaan pesanan saya. Terima kasih.'
   ].filter(Boolean).join('\n');
 }
 
 function updateCartBadge() {
   const count = cartItems.reduce((sum, entry) => sum + entry.quantity, 0);
   const badge = document.getElementById('cartCountBadge');
+  const floatingBadge = document.getElementById('floatingCartCount');
   if (badge) badge.textContent = count;
+  if (floatingBadge) floatingBadge.textContent = count;
 }
 
 function renderCart() {
@@ -539,6 +580,7 @@ function setupFilters() {
       document.querySelectorAll('.cat-pill-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentCategory = btn.getAttribute('data-cat');
+      menuPage = 1;
       renderMenu();
     };
   });
@@ -548,6 +590,7 @@ function setupFilters() {
   if (searchInput) {
     searchInput.oninput = (e) => {
       currentSearch = e.target.value;
+      menuPage = 1;
       renderMenu();
     };
   }
@@ -561,8 +604,10 @@ function initModalEvents() {
   const closeBtn = document.getElementById('closeOrderModalBtn');
   const sendBtn = document.getElementById('sendWaOrderBtn');
   const openCartBtn = document.getElementById('openCartBtn');
+  const floatingCartBtn = document.getElementById('floatingCartBtn');
 
   openCartBtn?.addEventListener('click', openCart);
+  floatingCartBtn?.addEventListener('click', openCart);
 
   if (closeBtn && backdrop) {
     closeBtn.addEventListener('click', () => backdrop.classList.remove('active'));
