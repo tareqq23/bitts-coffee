@@ -486,13 +486,15 @@ button {
 .pulse-dot {
   width: 6px;
   height: 6px;
-  width: 42px;
-  height: 52px;
   background: currentColor;
+  border-radius: 50%;
   box-shadow: 0 0 8px currentColor;
   flex: 0 0 auto;
 }
-  width: 100%;
+
+.live-indicator #liveStatusText {
+  white-space: nowrap;
+}
 .store-hours-text {
   font-size: 0.88rem;
   font-weight: 600;
