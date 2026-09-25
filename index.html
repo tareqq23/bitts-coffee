@@ -81,23 +81,36 @@
     <!-- ═══════════════════════════════════════════════
          2. HERO BENTO GRID
          ═══════════════════════════════════════════════ -->
-    <section class="hero-bento-section" id="home">
+    <!-- ═══════════════════════════════════════════════
+         2. HERO UNIFIED SECTION (Single Grand Canvas)
+         ═══════════════════════════════════════════════ -->
+    <section class="hero-unified-section" id="home">
       <div class="container">
-        <div class="bento-grid">
 
-          <!-- Tile A: Main Statement -->
-          <article class="bento-card bento-main-tile hero-animate">
-            <div>
-              <div class="slogan-pill-modern">
-                <span id="dynHeroBadge">✦ We Serve Bitter and Sweets</span>
-              </div>
-              <h1 class="hero-editorial-title" id="dynHeroTitle">
-                Every cup,<br>every bite,<br>every moment<br><em>matters.</em>
-              </h1>
-              <p class="hero-editorial-desc" id="dynHeroDesc">
-                Kopi pilihan berkualitas tinggi, sajian makanan hangat, dan ruang santai intim di jantung Pandeglang. Di sini kami merayakan keseimbangan rasa — pahitnya kopi yang menenangkan dan manisnya kebersamaan.
-              </p>
+        <!-- Master Unified Card: Typography + Integrated Coffee Photo -->
+        <article class="hero-unified-card hero-animate">
+          <!-- Background Photo & Multi-Stop Seamless Gradient -->
+          <div class="hero-backdrop-container">
+            <img id="dynHeroImg" src="assets/uploads/WhatsApp_Image_2026-09-21_at_15_41_51_jpeg_1789983223824.jpg" alt="BITTS Fast &amp; Slow Coffee Bar Pandeglang" class="hero-backdrop-img" loading="eager">
+            <div class="hero-backdrop-gradient" aria-hidden="true"></div>
+            <!-- Floating micro-badge on image -->
+            <div class="hero-floating-badge" aria-hidden="true">
+              <span class="hero-badge-dot"></span>
+              <span>Fast &amp; Slow Coffee Bar</span>
             </div>
+          </div>
+
+          <!-- Foreground Statement Column -->
+          <div class="hero-content-column">
+            <div class="slogan-pill-modern">
+              <span id="dynHeroBadge">✦ We Serve Bitter and Sweets</span>
+            </div>
+            <h1 class="hero-editorial-title" id="dynHeroTitle">
+              Every cup,<br>every bite,<br>every moment<br><em>matters.</em>
+            </h1>
+            <p class="hero-editorial-desc" id="dynHeroDesc">
+              Kopi pilihan berkualitas tinggi, sajian makanan hangat, dan ruang santai intim di jantung Pandeglang. Di sini kami merayakan keseimbangan rasa — pahitnya kopi yang menenangkan dan manisnya kebersamaan.
+            </p>
             <div class="hero-actions-row">
               <a href="#catalog" class="btn-pill-primary" id="dynHeroCtaPrimary">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
@@ -112,51 +125,44 @@
                 Chat via WhatsApp
               </a>
             </div>
+          </div>
+        </article>
+
+        <!-- Balanced Subgrid: Live Store Status & Sanctuary Space -->
+        <div class="hero-subgrid-row" id="story">
+          <!-- Tile C: Live Store Status -->
+          <article class="bento-card bento-status-card hero-animate" style="animation-delay: 0.15s;">
+            <div>
+              <div class="status-header-live">
+                <span class="status-label-text">LIVE STORE STATUS</span>
+                <span class="live-indicator" id="livePill">
+                  <span class="pulse-dot"></span>
+                  <span id="liveStatusText">Buka Sekarang</span>
+                </span>
+              </div>
+              <div class="store-hours-text" id="liveHoursDetail">Senin &ndash; Jumat: 08:00 &ndash; 22:00 WIB</div>
+              <div class="store-location-text">Jl. Ciwasiat No.21, Pandeglang</div>
+            </div>
+            <a href="https://maps.google.com/?q=Jl.+Ciwasiat+No.21+Pandeglang+Banten"
+               target="_blank" rel="noopener" class="bento-link-small" id="dynStatusMapsLink">
+              Petunjuk Arah &rarr;
+            </a>
           </article>
 
-          <!-- Tile B: Artisan Visual -->
-          <article class="bento-card bento-visual-tile hero-animate" style="animation-delay: 0.15s;">
-            <img id="dynHeroImg" src="assets/images/hero-coffee.jpg" alt="Artisanal Latte Art BITTS Coffee Pandeglang" loading="eager">
+          <!-- Tile D: Vibe & Space -->
+          <article class="bento-card bento-vibe-card hero-animate" style="animation-delay: 0.25s;">
+            <div>
+              <span class="vibe-tag">SANCTUARY SPACE</span>
+              <h3 class="vibe-title" id="dynSanctuaryTitle">Work, Chill &amp; Connect</h3>
+              <p class="vibe-desc" id="dynSanctuaryDesc">Ruang nyaman dengan stopkontak di setiap meja &amp; Wi-Fi super kencang.</p>
+            </div>
+            <div class="vibe-amenities" id="dynAmenitiesList">
+              <span class="amenity-chip">🚬 Smoking Area</span>
+              <span class="amenity-chip">🚭 Non-Smoking</span>
+            </div>
           </article>
+        </div><!-- /hero-subgrid-row -->
 
-          <!-- Tile C + D: Subgrid row -->
-          <div class="bento-subgrid" id="story">
-
-            <!-- Tile C: Live Store Status -->
-            <article class="bento-card bento-status-card hero-animate" style="animation-delay: 0.25s;">
-              <div>
-                <div class="status-header-live">
-                  <span class="status-label-text">LIVE STORE STATUS</span>
-                  <span class="live-indicator" id="livePill">
-                    <span class="pulse-dot"></span>
-                    <span id="liveStatusText">Buka Sekarang</span>
-                  </span>
-                </div>
-                <div class="store-hours-text" id="liveHoursDetail">Senin &ndash; Jumat: 08:00 &ndash; 22:00 WIB</div>
-                <div class="store-location-text">Jl. Ciwasiat No.21, Pandeglang</div>
-              </div>
-              <a href="https://maps.google.com/?q=Jl.+Ciwasiat+No.21+Pandeglang+Banten"
-                 target="_blank" rel="noopener" class="bento-link-small" id="dynStatusMapsLink">
-                Petunjuk Arah &rarr;
-              </a>
-            </article>
-
-            <!-- Tile D: Vibe & Space -->
-            <article class="bento-card bento-vibe-card hero-animate" style="animation-delay: 0.35s;">
-              <div>
-                <span class="vibe-tag">SANCTUARY SPACE</span>
-                <h3 class="vibe-title" id="dynSanctuaryTitle">Work, Chill &amp; Connect</h3>
-                <p class="vibe-desc" id="dynSanctuaryDesc">Ruang nyaman dengan stopkontak di setiap meja &amp; Wi-Fi super kencang.</p>
-              </div>
-              <div class="vibe-amenities" id="dynAmenitiesList">
-                <span class="amenity-chip">🚬 Smoking Area</span>
-                <span class="amenity-chip">🚭 Non-Smoking</span>
-              </div>
-            </article>
-
-          </div><!-- /bento-subgrid -->
-
-        </div><!-- /bento-grid -->
       </div>
     </section>
 
